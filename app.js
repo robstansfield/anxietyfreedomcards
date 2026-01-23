@@ -1217,4 +1217,3 @@ function finishedLoading() {
         }, 600);
     }
 }
-gi
