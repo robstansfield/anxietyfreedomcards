@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>illuminate online cards tool</title>
+    <meta name="description" content="illuminate Anxiety Freedom Cards online cards tool">
+	<meta name="keywords" content="illuminate, Anxiety Freedom Cards, in8">
+    <meta name="robots" content="index, follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Alec Stansfield">
+    <meta property="og:title" content="illuminate online cards tool">
+    <meta property="og:description" content="illuminate online cards tool">
+    <meta property="og:image" content="https://d11n7da8rpqbjy.cloudfront.net/in8uk/12428101_1598264132548illuminate-icon.png">
+    <meta property="og:type" content="website">
+    <link rel="shortcut icon" href="https://d11n7da8rpqbjy.cloudfront.net/in8uk/12428101_1598264132548illuminate-icon.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&display=swap" rel="stylesheet">
+
+    <!-- Konva.js for canvas rendering -->
+    <script src="https://unpkg.com/konva@7.0.5/konva.min.js"></script>
+    
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #f1f6ec;
+            font-family: "Open Sans", sans-serif;
+            height: 100%;
+            width: 100%;
+        }
+          
+        p {
+            display: block;
+            margin: 1em 0;
+        }
+
+        a {
+            color: #337ab7;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #23527c;
+            text-decoration: underline;
+        }
+        
+        .appContent {
+            height: 100%;
+            width: 100%;
+        }
+    
+        .appContent .header {
+            background-color: #f1f6ec;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 8vh;
+            min-height: 50px;
+        }
+        
+        .appContent .header img {
+            width: 10vw;
+            height: auto;
+            max-width: 8vh;
+             cursor: pointer;
+        }
+    
+        .appContent .stageBox {
+            background-color: #f1f6ec;
+            position: absolute;
+            top: 8vh;
+            width: 100%;
+        }
+        
+        /* ----- Reset Modal ----- */
+        .resetModal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.4);
+            animation: fadeIn 0.4s;
+        }
+        
+        .resetModal p {
+            display: block;
+            margin: 1em 0;
+            font-weight: 600;
+        }
+        
+        .resetModal h2 {
+            display: block;
+            margin: 0.83em 0;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        
+        .resetModal-content {
+            position: fixed;
+            top: 50vh;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fefefe;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 8px;
+            overflow: hidden;
+            animation: slideIn 0.4s;
+        }
+
+        .resetModal-header {
+            padding: 12px 16px;
+            background-color: #e94e20;
+            color: white;
+            text-align: left;
+        }
+        
+        .resetModal-header .close {
+            color: white;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .resetModal-header .close:hover {
+            color: rgb(82, 82, 82);
+        }
+
+        .resetModal-body {
+            padding: 16px;
+            color: #333;
+        }
+
+        .resetBtn {
+            font-family: "Open Sans", sans-serif;
+            font-size: 18px;
+            font-weight: bold;
+            color: #494949;
+            text-transform: uppercase;
+            background: #ffffff;
+            padding: 20px;
+            border: 4px solid #494949;
+            border-radius: 6px;
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin-bottom: 1em;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .resetBtn:hover {
+            color: #e94e20;
+            border-radius: 50px;
+            border-color: #e94e20;
+        }
+
+        /* ----- Logo Modal ----- */
+        .logoModal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.4);
+            animation: fadeIn 0.4s;
+        }
+        
+        .logoModal p {
+            display: block;
+            font-weight: 600;
+        }
+        
+        .logoModal h2 {
+            display: block;
+            margin: 0.83em 0;
+            font-size: 1.5em;
+            font-weight: 400;
+        }
+
+        .logoModal-content {
+            position: fixed;
+            top: 50vh;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fefefe;
+            width: 90%;
+            max-width: 700px;
+            border-radius: 8px;
+            overflow: hidden;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideIn 0.4s;
+        }
+
+        .logoModal-header {
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: RGB(93, 140, 146);
+            color: white;
+            position: relative;
+        }
+        
+        .logoModal-header .close {
+            color: white;
+            position: absolute;
+            right: 16px;
+            top: 8px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .logoModal-header .close:hover {
+            color: rgb(82, 82, 82);
+        }
+
+        .logoModal-header-content {
+            text-align: center;
+        }
+
+        .logoModal-header-content img {
+            height: 80px;
+            margin-bottom: 8px;
+        }
+
+        .logoModal-body {
+            text-align: left;
+            padding: 16px 24px;
+            color: #333;
+        }
+
+        .logoModal-body p {
+            font-weight: normal;
+            margin: 0.75em 0;
+            color: #333;
+        }
+
+        .logoModal-body .copyright {
+            text-align: center;
+            color: grey;
+            margin-top: 1.5em;
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from { top: 0; opacity: 0; }
+            to { top: 50vh; opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Loading animation */
+        .loading-wrapper {
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            z-index: 2000;
+            top: 0;
+            left: 0;
+            background-color: #242f3f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .loading-content {
+            width: 200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .loading-content p {
+            text-align: center;
+            color: white;
+            font-size: 24px;
+            margin-top: 1em;
+        }
+        
+        .loader {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 4px solid #fff;
+            animation: loader 2s infinite ease;
+          }
+        
+        .loader-inner {
+          vertical-align: top;
+          display: inline-block;
+          width: 100%;
+          background-color: #fff;
+          animation: loader-inner 2s infinite ease-in;
+        }
+        
+        @keyframes loader {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(180deg); }
+            50% { transform: rotate(180deg); }
+            75% { transform: rotate(360deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes loader-inner {
+            0% { height: 0%; }
+            25% { height: 0%; }
+            50% { height: 100%; }
+            75% { height: 100%; }
+            100% { height: 0%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="appContent">
+        <div class="header" id="header">
+            <img id="logo" src="https://in8-cards-resources.s3-eu-west-1.amazonaws.com/assets/images/Buttons/Button-Logo.png" onclick="openLogoModal()" alt="Logo">
+            <img id="reset" src="https://in8-cards-resources.s3-eu-west-1.amazonaws.com/assets/images/Buttons/Button-Reset.png" onclick="openResetModal()" alt="Reset">
+            <img id="plus" src="https://in8-cards-resources.s3-eu-west-1.amazonaws.com/assets/images/Buttons/Button-Plus.png" onclick="scaleup()" alt="Zoom In">
+            <img id="minus" src="https://in8-cards-resources.s3-eu-west-1.amazonaws.com/assets/images/Buttons/Button-Minus.png" onclick="scaledown()" alt="Zoom Out">
+            <img id="resCards" src="https://in8-cards-resources.s3-eu-west-1.amazonaws.com/assets/images/Buttons/Button-Hide-Res.png" onclick="resCards()" alt="Resource Cards">
+            <img id="needsCards" src="https://in8-cards-resources.s3-eu-west-1.amazonaws.com/assets/images/Buttons/Button-Show-Needs.png" onclick="needCards()" alt="Needs Cards">
+            <img id="infoCards" src="https://in8-cards-resources.s3-eu-west-1.amazonaws.com/assets/images/Buttons/Button-Show-Info.png" onclick="infoCards()" alt="Info Cards">
+            <img id="snapshot" src="https://in8-cards-resources.s3-eu-west-1.amazonaws.com/assets/images/Buttons/Button-Camera.png" onclick="screenshot()" alt="Screenshot">
+        </div>
+        <div class="stageBox" id="container"></div>
+    </div>
+
+    <!-- Loading element -->
+    <div class="loading-wrapper">
+        <div class="loading-content">
+            <span class="loader"><span class="loader-inner"></span></span>
+            <p>Loading..</p>
+        </div>
+    </div>
+
+    <!-- Reset Modal -->
+        <div id="resetModal" class="resetModal">
+            <div class="resetModal-content">
+                <div class="resetModal-header">
+                <span class="close" onclick="closeResetModal()">×</span>
+                  <h2>Reset</h2>
+                </div>
+                <div class="resetModal-body" style="text-align: center;">
+                  <p>Are you sure you want to reset the workspace? All current progress will be lost.</p>
+                  <button id="resetBtn" class="resetBtn" onclick="reset()">Yes, I'm Sure</button>
+              </div>
+        </div>
+    </div>
+
+    <!-- Logo/About Modal -->
+        <div id="logoModal" class="logoModal">
+            <div class="logoModal-content">
+                <div class="logoModal-header">
+                <span class="close" onclick="closeLogoModal()">×</span>
+                <div class="logoModal-header-content">
+                    <img src="https://in8-cards-resources.s3-eu-west-1.amazonaws.com/assets/images/Buttons/Button-Logo.png" alt="Logo">
+                        <h2>About the illuminate online tool from in8</h2>
+                </div>
+                </div>
+                <div class="logoModal-body">
+                    <p>Code version: v1.2.3</p>
+                    <p>How to use this tool: <a href="https://in8-cards-resources.s3.eu-west-1.amazonaws.com/illuminate+Instructions-V2.pdf" target="_blank">illuminate instructions.pdf</a></p>
+                    <p>Download the Anxiety Freedom Cards book: <a href="https://in8-cards-resources.s3.eu-west-1.amazonaws.com/Anxiety+Freedom+Cards+Book.pdf" target="_blank">Anxiety Freedom Cards Book.pdf</a></p>
+                    <p>Download the "Wheel of Needs" handout: <a href="https://client-handouts.s3.eu-west-1.amazonaws.com/Wheel+of+Needs-in8.pdf" target="_blank">Wheel of Needs.pdf</a></p>
+                    <p>Download the "Wheel of Resources" handout: <a href="https://client-handouts.s3.eu-west-1.amazonaws.com/Wheel+of+Resources-in8.pdf" target="_blank">Wheel of Resources.pdf</a></p>
+                <p>Conceived by: Alec Stansfield & Bindi Gauntlett</p>
+                    <p>Illustrated by: Laurie Stansfield</p>
+                <p>Developed by: <a href="https://www.linkedin.com/in/bakirmujkanovic/" target="_blank">Bakir Mujkanović</a> and Alec Stansfield</p>
+                <p class="copyright">Copyright © 2020 Alec Stansfield</p>
+              </div>
+        </div>
+    </div>
+
+   <div id="javascriptLoader"></div>
+
+    <script>
+        // Modal functions
+        var resetModal = document.getElementById("resetModal");
+        var logoModal = document.getElementById("logoModal");
+
+        function openResetModal() {
+            resetModal.style.display = "block";
+        }
+
+        function closeResetModal() {
+            resetModal.style.display = "none";
+        }
+
+        function openLogoModal() {
+            logoModal.style.display = "block";
+        }
+
+        function closeLogoModal() {
+            logoModal.style.display = "none";
+        }
+    
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target == logoModal) {
+                logoModal.style.display = "none";
+            } else if (event.target == resetModal) {
+                resetModal.style.display = "none";
+            }
+        }
+        
+        // Resize handling
+        var rtime;
+        var timeout = false;
+        var delta = 200;
+        var cardsData, rectsData, buttonsData, numOfScale, dblClicked, stageWidth, stageHeight;
+        var magnifiedCardValues = {};
+
+        window.addEventListener('resize', function() {
+            rtime = new Date();
+            if (timeout === false) {
+                timeout = true;
+                if (typeof cards !== 'undefined' && typeof rects !== 'undefined') {
+                cardsData = cards;
+                rectsData = rects;
+                buttonsData = getButtonStates();
+                numOfScale = scaleUpDown;
+                dblClicked = isMagnified;
+                stageWidth = stage.width();
+                stageHeight = stage.height();
+                    if (typeof previousValues !== 'undefined') {
+                        Object.assign(magnifiedCardValues, previousValues);
+                    }
+                }
+                setTimeout(resizeEnd, delta);
+            }
+        });
+
+        function resizeEnd() {
+            if (new Date() - rtime < delta) {
+                setTimeout(resizeEnd, delta);
+            } else {
+                timeout = false;
+                resizeCanvas();
+            }               
+        }
+        
+        function resizeCanvas() {
+            var html = document.getElementsByTagName("html")[0];
+            var canvas = document.getElementsByTagName("canvas");
+            var content = document.getElementsByClassName("konvajs-content");
+            
+            let height = window.innerHeight;
+            let width = window.innerWidth;
+            
+            if (content[0]) {
+                content[0].style.height = height + 'px';
+                content[0].style.width = width + 'px';
+            }
+
+            if (canvas[0]) {
+                canvas[0].width = width;
+                canvas[0].height = height;
+            }
+
+            html.style.height = height + 'px';
+            html.style.width = width + 'px';
+
+            var oldScript = document.getElementById("appJs");
+            if (oldScript) {
+                oldScript.remove();
+            }
+            getJavascript();
+        }
+
+        function getJavascript() {
+            let element = document.getElementById("javascriptLoader");
+            let script = document.createElement('script');
+            script.src = "app.js";
+            script.id = "appJs";
+            element.appendChild(script);
+        }
+        
+        function getButtonStates() {
+            let buttons = [
+                document.getElementById("logo"),
+                document.getElementById("reset"),
+                document.getElementById("plus"),
+                document.getElementById("minus"),
+                document.getElementById("resCards"),
+                document.getElementById("needsCards"),
+                document.getElementById("infoCards")
+            ];
+            
+            let buttonStates = {
+                logo: "",
+                reset: "",
+                plus: "",
+                minus: "",
+                res: "",
+                needs: "",
+                info: "",
+            }
+            
+            const entries = Object.entries(buttonStates);
+            let i = 0;
+            buttons.forEach(button => {
+                entries[i][1] = null;
+                entries[i][2] = button.src;
+                if (button.onclick != null) {
+                    entries[i][1] = button.onclick.name;
+                }
+                i++;
+            });
+            
+            return entries;
+        }
+
+        // Load the app on page load
+        window.onload = function() {
+            getJavascript();
+        };
+    </script>
+</body>
+</html>
