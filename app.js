@@ -212,11 +212,15 @@ function buildStage(images) {
 
     //Creating the sorting bucket
     if (isMobile) {
+        // Calculate starting X to center all 3 card slots per row
+        let totalRowWidth = (rectWidth * 3) + (spaceX * 2);
+        let mobileStartX = (window.innerWidth - totalRowWidth) / 2;
+        
         for (let i = 0, counter = 0; i < 2; i++) {
             for (let j = 0; j < 3; j++, counter++) {
                 rects[counter] = new Konva.Rect({
                     id: counter,
-                    x: (rectWidth + spaceX) * j + spaceX / 2,
+                    x: mobileStartX + (rectWidth + spaceX) * j,
                     y: beginningOfSortingArea + ((rectHeight + spaceY) * i),
                     width: rectWidth,
                     height: rectHeight,
@@ -238,10 +242,14 @@ function buildStage(images) {
             }
         }
     } else {
+        // Calculate starting X to center all 6 card slots
+        let totalRectsWidth = (rectWidth * 6) + (space * 5);
+        let startX = (width - totalRectsWidth) / 2;
+        
         for (let i = 0; i < 6; i++) {
             rects[i] = new Konva.Rect({
                 id: i,
-                x: (rectWidth + space) * i,
+                x: startX + (rectWidth + space) * i,
                 y: height - rectHeight / 2,
                 width: rectWidth,
                 height: rectHeight,
