@@ -1,4 +1,8 @@
 /*
+&& Code Version 1.3.2 &&
+- Fixed header height to maintain consistent desktop/mobile view switching
+- Adjusted button sizing with min/max constraints for better scaling
+
 && Code Version 1.3.1 &&
 - Improved header layout with responsive sizing using clamp()
 - Added flex-wrap and gap for better icon spacing
