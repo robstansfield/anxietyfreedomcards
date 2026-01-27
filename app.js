@@ -1,4 +1,16 @@
 /*
+&& Code Version 1.3.1 &&
+- Improved header layout with responsive sizing using clamp()
+- Added flex-wrap and gap for better icon spacing
+- Centered card slots on both mobile and desktop views
+
+&& Code Version 1.3 &&
+- Clean standalone HTML (no Kartra markup)
+- Local app.js instead of S3
+- Removed jQuery dependency
+- Card images load from S3
+- Ready for GitHub Pages
+
 && Code Version 1.2.3 &&
 - Changed links from Kartra based in8 membership to Vimeo video files
 
